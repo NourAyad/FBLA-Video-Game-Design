@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-	    if (Input.GetKey("space") && Time.time > nextFire)
+	    if (Input.GetKey(KeyCode.Space) && Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;
             Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
