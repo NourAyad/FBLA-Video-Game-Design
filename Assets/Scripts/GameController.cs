@@ -12,10 +12,11 @@ public class GameController : MonoBehaviour {
     public float waveWait;
 
     private bool gameOver;
-
+    private AudioSource audio;
 	// Use this for initialization
 	void Start ()
     {
+        audio = GetComponent<AudioSource>();
         gameOver = false;
         hazardsInWave = hazardsPerWave;
 
@@ -32,7 +33,7 @@ public class GameController : MonoBehaviour {
     IEnumerator SpawnWaves ()
     {
         yield return new WaitForSeconds(startWait);
-
+        audio.Play();
         while(true)
         {
             for (int i = 0; i < hazardsInWave; i++)
