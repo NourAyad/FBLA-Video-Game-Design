@@ -11,8 +11,13 @@ public class PlayerController : MonoBehaviour
 {
 
     private Rigidbody playerRigidBody;
+    public GameController gameController;
+
     public Boundary boundary;
     public float speed;
+
+    public int lives;
+    private int health;
 
     public GameObject shot;
     public Transform shotSpawn;
@@ -25,6 +30,8 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidBody = GetComponent<Rigidbody>();
         nextFire = Time.time + fireRate;
+        health = lives;
+        gameController.health = health;
 	}
 	
 	// Update is called once per frame
@@ -34,6 +41,11 @@ public class PlayerController : MonoBehaviour
         {
             nextFire = Time.time + fireRate;
             Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+        }
+
+        if(health <= 0)
+        {
+            Die();
         }
 	}
 
@@ -50,5 +62,18 @@ public class PlayerController : MonoBehaviour
             0.0f,
             Mathf.Clamp(playerRigidBody.position.z, boundary.zMin, boundary.zMax)
             );
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
+        gameController.gameOver = true;
+    }
+
+    public void LoseLife(int dmg)
+    {
+        health -= dmg;
+        gameController.health = health; 
+
     }
 }
