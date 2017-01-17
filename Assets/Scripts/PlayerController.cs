@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRigidBody;
     public GameController gameController;
+    private AudioSource audio;
 
     public Boundary boundary;
     public float speed;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour
         nextFire = Time.time + fireRate;
         health = maxHealth;
         gameController.health = health;
+        audio = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -43,6 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             nextFire = Time.time + fireRate;
             Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+            audio.Play();
         }
 
         if(health <= 0)

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
@@ -14,6 +15,9 @@ public class GameController : MonoBehaviour {
     public float startWait;
     public float waveWait;
 
+    public ParticleSystem starField;
+    public ParticleSystem starField2;
+
     private int levelNumber;
     public int numberOfWavesInLevel1;
     public int numberOfWavesInLevel2;
@@ -23,10 +27,14 @@ public class GameController : MonoBehaviour {
     public int score;
     public Text scoreText;
     public Text livesText;
-    public Text waveText;  
+    public Text waveText;
+    public Text hintText;
+    public Text indicatorText;
     public int health;
 
     public bool gameOver;
+    public bool win;
+
 
     private AudioSource audio;
 
@@ -40,11 +48,14 @@ public class GameController : MonoBehaviour {
         Screen.SetResolution(800, 900, false);
         audio = GetComponent<AudioSource>();
         gameOver = false;
+        win = false;
         hazardsInWave = hazardsPerWave;
         
         //Initialize UI
         scoreText.text = "SCORE: " + score;
         livesText.text = "LIVES: " + health;
+        hintText.text = "";
+        indicatorText.text = "Starting...";
 
         //Begin hazard spawning
         StartCoroutine(SpawnWaves());
@@ -56,6 +67,18 @@ public class GameController : MonoBehaviour {
     {
         //Keep UI updated
         UpdateText();
+
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        if(gameOver || win)
+        {
+            if(Input.GetKey(KeyCode.M))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
+        }
 	}
 
     IEnumerator SpawnWaves ()
@@ -63,18 +86,25 @@ public class GameController : MonoBehaviour {
         int hazardsLevel1 = hazards.Length - 12;
         int hazardsLevel2 = hazards.Length - 4;
         int hazardsLevel3 = hazards.Length;
-        
+
         //Initial intro prompts
-        waveText.text = "READY, COMMANDER?";
+        yield return new WaitForSeconds(1);
+        waveText.text = "READY, CAPTAIN?";
         yield return new WaitForSeconds(startWait);
         waveText.text = "";
         yield return new WaitForSeconds(.5f);
-        waveText.text = "LEVEL 1";
-        yield return new WaitForSeconds(1);
-        waveText.text = "";
 
         //Start background music
         audio.Play();
+
+        waveText.text = "LEVEL 1";
+        hintText.text = "Good Luck! We're entering an asteroid field! Remember, spacebar to shoot!";
+        indicatorText.text = "L1" + "-" + "W1";
+        yield return new WaitForSeconds(4);
+        waveText.text = "";
+        hintText.text = "";
+
+
         while(true)
         {
             
@@ -82,8 +112,17 @@ public class GameController : MonoBehaviour {
             //Loop spawning each wave
             for (int i = 1; i <= numberOfWavesInLevel1; i++)
             {
+                //Check if player is dead
+                if (gameOver)
+                {
+                    GameOver();
+                    break;
+                }
+
+
                 //Wave Prompt
                 waveText.text = "WAVE " + i;
+                indicatorText.text = "L1-W" + i;
                 yield return new WaitForSeconds(1);
                 waveText.text = "";
                 //Spawn Hazards
@@ -128,20 +167,26 @@ public class GameController : MonoBehaviour {
 
             //prompts once level is complete
             waveText.text = "LEVEL 1 COMPLETE!";
+            hintText.text = "Well done Captain!";
             yield return new WaitForSeconds(levelWait);
             waveText.text = "";
+            hintText.text = "";
             yield return new WaitForSeconds(1);
 
             //Begin Level 2
             waveText.text = "LEVEL 2";
-            yield return new WaitForSeconds(1);
+            hintText.text = "We're entering a denser asteroid field! Watch out for faster asteroids!";
+            indicatorText.text = "Level 2 starting...";
+            yield return new WaitForSeconds(4);
             waveText.text = "";
+            hintText.text = "";
             yield return new WaitForSeconds(1);
 
             for (int i = 1; i <= numberOfWavesInLevel2; i++)
             {
                 //Wave Prompt
                 waveText.text = "WAVE " + i;
+                indicatorText.text = "L2-W" + i;
                 yield return new WaitForSeconds(1);
                 waveText.text = "";
                 //Spawn Hazards
@@ -186,20 +231,26 @@ public class GameController : MonoBehaviour {
 
             //prompts once level is complete
             waveText.text = "LEVEL 2 COMPLETE!";
-            yield return new WaitForSeconds(levelWait);
+            hintText.text = "Excellent work Captain! We're almost back to the base!";
+            yield return new WaitForSeconds(2);
             waveText.text = "";
+            hintText.text = "";
             yield return new WaitForSeconds(1);
 
             //Begin Level 2
             waveText.text = "LEVEL 3";
-            yield return new WaitForSeconds(1);
+            hintText.text = "Oh no! Enemy ships inbound! Watch out for their guns!";
+            indicatorText.text = "Level 3 starting...";
+            yield return new WaitForSeconds(3);
             waveText.text = "";
+            hintText.text = "";
             yield return new WaitForSeconds(1);
 
             for (int i = 1; i <= numberOfWavesInLevel3; i++)
             {
                 //Wave Prompt
                 waveText.text = "WAVE " + i;
+                indicatorText.text = "L3-W" + i;
                 yield return new WaitForSeconds(1);
                 waveText.text = "";
                 //Spawn Hazards
@@ -260,11 +311,21 @@ public class GameController : MonoBehaviour {
     void GameOver()
     {
         waveText.text = "GAME OVER";
+        hintText.text = "Oh no! You're ship has been blasted to bits! Press M to go back to the main menu and try again!";
+        indicatorText.text = "Lost!";
+        starField.Pause();
+        starField2.Pause();
+       
     }
 
     void WinSequence()
     {
         waveText.text = "YOU WIN!";
+        hintText.text = "You did it! Amazing work Captain! You're final score is " + score + "! Wow! Press M to go back to the main menu and do it all again!";
+        indicatorText.text = "Won!";
+        starField.Pause();
+        starField2.Pause();
+        win = true;
     }
     IEnumerator SpawnWave(int numberofHazards, float spawnRate)
     {

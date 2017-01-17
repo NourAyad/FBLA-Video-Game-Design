@@ -26,9 +26,9 @@ public class ButtonManager : MonoBehaviour {
         SceneManager.LoadScene(level);
     }
 
-    public void InstructionsGameButton()
+    public void InstructionsGameButton(string level)
     {
-
+        SceneManager.LoadScene(level);
     }
     public void ExitButton()
     {
