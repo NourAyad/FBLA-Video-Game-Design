@@ -5,6 +5,7 @@ public class DestroyByContact : MonoBehaviour {
 
     public int damage = 1;
     public int score;
+    public GameObject asteroidExplosion;
     private Rigidbody rb;
     private PlayerController player;
     private GameController gameController;
@@ -29,8 +30,10 @@ public class DestroyByContact : MonoBehaviour {
         } else if (other.CompareTag("Player")) {
             player.LoseLife(damage);
             Destroy(gameObject);
+            Instantiate(asteroidExplosion, transform.position, transform.rotation);
         } else {
             Destroy(other.gameObject);
+            Instantiate(asteroidExplosion, transform.position, transform.rotation);
             Destroy(gameObject);
             gameController.AddScore(score);
         }

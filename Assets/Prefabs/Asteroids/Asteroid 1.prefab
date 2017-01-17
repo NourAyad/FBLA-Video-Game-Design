@@ -101,6 +101,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f477ad480df8c874fb82c79761d024b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 1
+  score: 10
+  asteroidExplosion: {fileID: 100004, guid: 90d8e80bc97330e449a291401c99478a, type: 2}
 --- !u!114 &11488080
 MonoBehaviour:
   m_ObjectHideFlags: 1

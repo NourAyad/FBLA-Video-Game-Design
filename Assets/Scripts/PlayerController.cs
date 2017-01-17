@@ -16,13 +16,15 @@ public class PlayerController : MonoBehaviour
     public Boundary boundary;
     public float speed;
 
-    public int lives;
+    public int maxHealth;
     private int health;
 
     public GameObject shot;
     public Transform shotSpawn;
     public float fireRate;
     private float nextFire;
+
+    public GameObject deathExplosion;
     
     
 	// Use this for initialization
@@ -30,7 +32,7 @@ public class PlayerController : MonoBehaviour
     {
         playerRigidBody = GetComponent<Rigidbody>();
         nextFire = Time.time + fireRate;
-        health = lives;
+        health = maxHealth;
         gameController.health = health;
 	}
 	
@@ -66,8 +68,9 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject);
         gameController.gameOver = true;
+        Instantiate(deathExplosion, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 
     public void LoseLife(int dmg)
