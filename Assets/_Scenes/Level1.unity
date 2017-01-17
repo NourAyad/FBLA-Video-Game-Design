@@ -674,26 +674,38 @@ MonoBehaviour:
   - {fileID: 181470, guid: 1b5e2cc94b9ee424f8553dab139ed2f8, type: 2}
   - {fileID: 181470, guid: 1b5e2cc94b9ee424f8553dab139ed2f8, type: 2}
   - {fileID: 181470, guid: 1b5e2cc94b9ee424f8553dab139ed2f8, type: 2}
-  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
-  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
-  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
   - {fileID: 154416, guid: e65c03c38553e004f8e912527d2d8558, type: 2}
   - {fileID: 154416, guid: e65c03c38553e004f8e912527d2d8558, type: 2}
-  - {fileID: 181470, guid: b3ff33efc2ec11d4da737a8cba4e56aa, type: 2}
-  - {fileID: 181470, guid: b3ff33efc2ec11d4da737a8cba4e56aa, type: 2}
   - {fileID: 181470, guid: aeef4a96e95788f49a52264037275663, type: 2}
   - {fileID: 181470, guid: aeef4a96e95788f49a52264037275663, type: 2}
-  - {fileID: 181470, guid: 8cda9e7112323e24886dd73869d54e52, type: 2}
   - {fileID: 181470, guid: 942f6100214727645908811b8cf616ac, type: 2}
+  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
+  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
+  - {fileID: 181470, guid: 49c37794a9c89f54392f73c5dc23109a, type: 2}
+  - {fileID: 181470, guid: b3ff33efc2ec11d4da737a8cba4e56aa, type: 2}
+  - {fileID: 181470, guid: b3ff33efc2ec11d4da737a8cba4e56aa, type: 2}
+  - {fileID: 181470, guid: 8cda9e7112323e24886dd73869d54e52, type: 2}
+  - {fileID: 181470, guid: 8cda9e7112323e24886dd73869d54e52, type: 2}
   - {fileID: 181470, guid: ded15bedabb35894fb0b8c7495489552, type: 2}
+  - {fileID: 1049254632595648, guid: 75cccf91f3a490f41816764eb32c3db4, type: 2}
+  - {fileID: 1049254632595648, guid: 75cccf91f3a490f41816764eb32c3db4, type: 2}
+  - {fileID: 1286428662348938, guid: 3a7ad219a1b9f36459620ce395abce1b, type: 2}
+  - {fileID: 1286428662348938, guid: 3a7ad219a1b9f36459620ce395abce1b, type: 2}
   spawnValues: {x: 12, y: 0, z: 27}
-  hazardsPerWave: 24
+  hazardsPerWave: 15
+  hazardsInWaveLevel2: 25
+  hazardsInWaveLevel3: 35
   spawnWait: 0.2
   startWait: 2
-  waveWait: 2
+  waveWait: 3
+  numberOfWavesInLevel1: 5
+  numberOfWavesInLevel2: 5
+  numberOfWavesInLevel3: 5
+  levelWait: 5
   score: 0
   scoreText: {fileID: 691070306}
   livesText: {fileID: 1177452740}
+  waveText: {fileID: 866828595}
   health: 0
   gameOver: 0
 --- !u!4 &697820581
@@ -800,7 +812,7 @@ GameObject:
   - component: {fileID: 866828596}
   - component: {fileID: 866828595}
   m_Layer: 5
-  m_Name: Text
+  m_Name: WaveText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

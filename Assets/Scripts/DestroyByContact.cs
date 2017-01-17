@@ -7,12 +7,22 @@ public class DestroyByContact : MonoBehaviour {
     public int score;
     public GameObject asteroidExplosion;
     private Rigidbody rb;
-    private PlayerController player;
+    private GameObject player;
+    private PlayerController playerController;
     private GameController gameController;
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
-        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        player = GameObject.FindWithTag("Player");
+
+        if (player != null)
+        {
+            playerController = player.GetComponent<PlayerController>();
+        } else
+        {
+            Debug.Log("Player is dead");
+        }
+        GetComponent<PlayerController>();
         gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 	}
 	
@@ -28,7 +38,7 @@ public class DestroyByContact : MonoBehaviour {
         {
             return;
         } else if (other.CompareTag("Player")) {
-            player.LoseLife(damage);
+            playerController.LoseLife(damage);
             Destroy(gameObject);
             Instantiate(asteroidExplosion, transform.position, transform.rotation);
         } else {
