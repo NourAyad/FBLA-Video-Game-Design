@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public Boundary boundary;
     public float speed;
 
+    public int maxLives;
+    private int lives;
     public int maxHealth;
     private int health;
 
@@ -32,9 +34,11 @@ public class PlayerController : MonoBehaviour
 	void Start ()
     {
         playerRigidBody = GetComponent<Rigidbody>();
+        gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
         nextFire = Time.time + fireRate;
         health = maxHealth;
         gameController.health = health;
+        gameController.maxHealth = maxHealth;
         audio = GetComponent<AudioSource>();
 	}
 	
@@ -74,12 +78,16 @@ public class PlayerController : MonoBehaviour
         gameController.gameOver = true;
         Instantiate(deathExplosion, transform.position, transform.rotation);
         Destroy(gameObject);
+        gameController.lives -= 1;
+        gameController.playerDead = true;
+        Debug.Log(lives);
     }
 
-    public void LoseLife(int dmg)
+    public void LoseHP(int dmg)
     {
+        gameController.damaged = true;
         health -= dmg;
-        gameController.health = health; 
+        gameController.health = health;
 
     }
 }

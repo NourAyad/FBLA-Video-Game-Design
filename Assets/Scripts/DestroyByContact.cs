@@ -38,7 +38,7 @@ public class DestroyByContact : MonoBehaviour {
         {
             return;
         } else if (other.CompareTag("Player")) {
-            playerController.LoseLife(damage);
+            playerController.LoseHP(damage);
             Destroy(gameObject);
             Instantiate(asteroidExplosion, transform.position, transform.rotation);
         } else {

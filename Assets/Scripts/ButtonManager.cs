@@ -9,7 +9,7 @@ public class ButtonManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        Screen.SetResolution(704, 1036, false);
+        Screen.SetResolution(476, 700, false);
 	}
 	
 	// Update is called once per frame
