@@ -30,6 +30,12 @@ public class ButtonManager : MonoBehaviour {
     {
         SceneManager.LoadScene(level);
     }
+
+    public void LeaderboardButton(string level)
+    {
+        SceneManager.LoadScene(level);
+    }
+
     public void ExitButton()
     {
         Application.Quit();

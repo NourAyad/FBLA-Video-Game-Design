@@ -7,21 +7,32 @@ public class BackgroundSpawner : MonoBehaviour {
     public GameObject[] planets;
     public Vector3 spawnValues;
     public float spawnWait;
-    private GameController gameController;
-    private bool running;
+    public GameController gameController;
+    public bool running;
+    public bool started;
 
 	// Use this for initialization
 	void Start () {
         running = true;
-        StartCoroutine(SpawnBackground());
+        started = false;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        if (!started && running)
+        {
+            StartCoroutine(SpawnBackground());
+            started = true;
+        }
 	}
 
-    IEnumerator SpawnBackground()
+    public IEnumerator SpawnBackground()
     {
+        started = true;
+        Debug.Log("background started");
+        //initial wait time
+        yield return new WaitForSeconds(5);
         //To avoid having to recall this function everytime the player dies, the function will instead just run continuously
         while (running) {
             //If the player is dead don't spawn planets, this is like pausing the starfield
@@ -36,10 +47,15 @@ public class BackgroundSpawner : MonoBehaviour {
 
                 //Spawns selected planet at selected location
                 Instantiate(planet, spawnPosition, spawnRotation);
-
+                Debug.Log("Spawn planet");
                 //Wait for set amount of seconds before spawning next planet
                 yield return new WaitForSeconds(spawnWait);
-            }           
+            } 
+            if (!running)
+            {
+                break;
+            }          
         }
+       
     }
 }

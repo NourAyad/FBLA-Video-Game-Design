@@ -9,6 +9,9 @@ public class GameController : MonoBehaviour {
     public GameObject[] hazards;
     public GameObject AttackSpeedBoost;
 
+    public UpgradeSystem upgradeSystem;
+    public BackgroundSpawner backgroundSpawner;
+
     public Vector3 spawnValues;
     public int hazardsPerWave;
     private int hazardsInWave;
@@ -35,6 +38,9 @@ public class GameController : MonoBehaviour {
     public Text healthText;
     public Text hintText;
     public Text indicatorText;
+    public Text pointsToUpgrade;
+
+    public Image cptLazer;
 
     public int maxHealth;
     public int health;
@@ -62,7 +68,7 @@ public class GameController : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        Screen.SetResolution(933, 700, false);
+        Screen.SetResolution(833, 700, false);
         //DontDestroyOnLoad(this);
         audio = GetComponent<AudioSource>();
         gameOver = false;
@@ -75,7 +81,9 @@ public class GameController : MonoBehaviour {
         healthText.text = "HP: " + health;
         waveText.text = "";
         hintText.text = "";
+        pointsToUpgrade.text = "";
         indicatorText.text = "Starting...";
+        HideCaptainLazer();
 
         healthSlider.maxValue = maxHealth;
         healthSlider.value = health;
@@ -181,10 +189,12 @@ public class GameController : MonoBehaviour {
 
         lastCompletedWave = 1;
         waveText.text = "LEVEL 1";
+        ShowCaptainLazer();
         hintText.text = "Good Luck! We're entering an asteroid field! Remember, spacebar to shoot!";
         indicatorText.text = "L1" + "-" + "W1";
         yield return new WaitForSeconds(4);
         waveText.text = "";
+        HideCaptainLazer();
         hintText.text = "";
 
         //Level 1
@@ -236,8 +246,6 @@ public class GameController : MonoBehaviour {
             //Pause before beginning next wave
             yield return new WaitForSeconds(waveWait);
         }
-        Instantiate(AttackSpeedBoost, new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z), Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
         //Check to ensure player has not died
         if (playerDead)
         {
@@ -248,9 +256,11 @@ public class GameController : MonoBehaviour {
         {
             //prompts once level is complete
             waveText.text = "LEVEL 1 COMPLETE!";
+            ShowCaptainLazer();
             hintText.text = "Well done Captain!";
             yield return new WaitForSeconds(levelWait);
             waveText.text = "";
+            HideCaptainLazer();
             hintText.text = "";
             yield return new WaitForSeconds(1);
             spawnNextWave = true;
@@ -264,10 +274,12 @@ public class GameController : MonoBehaviour {
         // Begin Level 2
         lastCompletedWave = 2;
         waveText.text = "LEVEL 2";
+        ShowCaptainLazer();
         hintText.text = "We're entering a denser asteroid field! Watch out for faster asteroids!";
         indicatorText.text = "Level 2 starting...";
         yield return new WaitForSeconds(4);
         waveText.text = "";
+        HideCaptainLazer();
         hintText.text = "";
         yield return new WaitForSeconds(1);
 
@@ -311,8 +323,7 @@ public class GameController : MonoBehaviour {
             //Pause before beginning next wave
             yield return new WaitForSeconds(waveWait);
         }
-        Instantiate(AttackSpeedBoost, new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z), Quaternion.identity);
-        yield return new WaitForSeconds(.5f);
+
         if (playerDead)
         {
             PlayerDead();
@@ -321,9 +332,11 @@ public class GameController : MonoBehaviour {
         {
             //prompts once level is complete
             waveText.text = "LEVEL 2 COMPLETE!";
+            ShowCaptainLazer();
             hintText.text = "Excellent work Captain! We're almost back to the base!";
             yield return new WaitForSeconds(2);
             waveText.text = "";
+            HideCaptainLazer();
             hintText.text = "";
             yield return new WaitForSeconds(1);
             spawnNextWave = true;
@@ -337,10 +350,12 @@ public class GameController : MonoBehaviour {
         //Begin Level 3
         lastCompletedWave = 3;
         waveText.text = "LEVEL 3";
+        ShowCaptainLazer();
         hintText.text = "Oh no! Enemy ships inbound! Watch out for their guns!";
         indicatorText.text = "Level 3 starting...";
         yield return new WaitForSeconds(3);
         waveText.text = "";
+        HideCaptainLazer();
         hintText.text = "";
         yield return new WaitForSeconds(1);
 
@@ -397,6 +412,7 @@ public class GameController : MonoBehaviour {
     public void AddScore (int value)
     {
         score += value;
+        upgradeSystem.currentScore = score;
     }
 
     void UpdateUI()
@@ -404,31 +420,45 @@ public class GameController : MonoBehaviour {
         scoreText.text = "SCORE: " + score;
         livesText.text = "LIVES: " + lives;
         healthText.text = "HP: " + health;
+        pointsToUpgrade.text = "NEXT UPGRADE IN " + (upgradeSystem.targetScore - score) + " POINTS";
         healthSlider.value = health;
     }
 
     void PlayerDead()
     {
+        ShowCaptainLazer();
         waveText.text = "YOU DIED!";
         hintText.text = "Oh no, you're ship sustained too much damage and you've lost a life! Press R to try the level again!";
         indicatorText.text = "Exploded!";
+        upgradeSystem.upgradeAvailable = false;
+        upgradeSystem.upgradeInitiated = false;
         starField.Pause();
         starField2.Pause();
+
+        backgroundSpawner.running = false;
+        backgroundSpawner.started = false;
     }
 
     void PlayerReset ()
     {
+        HideCaptainLazer();
         waveText.text = "";
         hintText.text = "";
         indicatorText.text = "Respawning!";
-        Instantiate(playerShip, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+        Instantiate(playerShip, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));  
         starField.Play();
         starField2.Play();
         playerDead = false;
+        upgradeSystem.FindPlayer();
+        backgroundSpawner.running = true;
+        
     } 
     void GameOver()
     {
+
+        gameOver = true;
         waveText.text = "GAME OVER";
+        ShowCaptainLazer();
         hintText.text = "Oh no! You're ship has been blasted to bits! Press M to go back to the main menu and try again!";
         indicatorText.text = "Lost!";
         starField.Pause();
@@ -439,6 +469,7 @@ public class GameController : MonoBehaviour {
     void WinSequence()
     {
         waveText.text = "YOU WIN!";
+        ShowCaptainLazer();
         hintText.text = "You did it! Amazing work Captain! You're final score is " + score + "! Wow! Press M to go back to the main menu and do it all again!";
         indicatorText.text = "Won!";
         starField.Pause();
@@ -475,5 +506,15 @@ public class GameController : MonoBehaviour {
             damageImage.color = Color.Lerp(damageImage.color, Color.clear, flashSpeed * Time.deltaTime);
         }
         damaged = false;
+    }
+
+    void ShowCaptainLazer()
+    {
+        cptLazer.enabled = true;
+    }
+
+    void HideCaptainLazer()
+    {
+        cptLazer.enabled = false;
     }
 }

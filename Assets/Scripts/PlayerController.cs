@@ -40,7 +40,8 @@ public class PlayerController : MonoBehaviour
         gameController.health = health;
         gameController.maxHealth = maxHealth;
         audio = GetComponent<AudioSource>();
-	}
+        gameController.healthSlider.maxValue = maxHealth;
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -75,7 +76,6 @@ public class PlayerController : MonoBehaviour
 
     void Die()
     {
-        gameController.gameOver = true;
         Instantiate(deathExplosion, transform.position, transform.rotation);
         Destroy(gameObject);
         gameController.lives -= 1;
