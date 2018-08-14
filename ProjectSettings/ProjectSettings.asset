@@ -463,11 +463,11 @@ PlayerSettings:
   XboxOnePersistentLocalStorageSize: 0
   vrEditorSettings: {}
   cloudServicesEnabled:
-    Build: 1
-    Collab: 1
+    Build: 0
+    Collab: 0
     ErrorHub: 0
     Hub: 0
-    UNet: 1
+    UNet: 0
   cloudProjectId: 80fc07e0-1816-4626-b2a7-58505dafca4c
   projectName: FBLA-Video-Game-Design (1)
   organizationId: nourayad

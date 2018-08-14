@@ -420,7 +420,14 @@ public class GameController : MonoBehaviour {
         scoreText.text = "SCORE: " + score;
         livesText.text = "LIVES: " + lives;
         healthText.text = "HP: " + health;
-        pointsToUpgrade.text = "NEXT UPGRADE IN " + (upgradeSystem.targetScore - score) + " POINTS";
+        if (upgradeSystem.currentAttackSpeedLevel < upgradeSystem.maxLevel || upgradeSystem.currentMovementSpeedLevel < upgradeSystem.maxLevel)
+        {
+            pointsToUpgrade.text = "NEXT UPGRADE IN " + (upgradeSystem.targetScore - score) + " POINTS";
+        } else
+        {
+            pointsToUpgrade.text = "UPGRADES MAXED!";
+            pointsToUpgrade.color = new Color(248/255f, 216/255f, 113/255f, 1f);
+        }
         healthSlider.value = health;
     }
 
